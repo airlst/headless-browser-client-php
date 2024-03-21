@@ -13,7 +13,7 @@ abstract readonly class Response
     public function __construct(ResponseInterface $response)
     {
         /** @var array $body */
-        $body = json_decode($response->getBody()->getContents(), true);
+        $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->body = $body;
     }
 }

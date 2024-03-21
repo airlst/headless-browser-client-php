@@ -9,7 +9,7 @@ use Airlst\HeadlessBrowserClient\Response\PdfResponse;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
 
-final readonly class HeadlessBrowser
+readonly class HeadlessBrowser
 {
     private const API_URL = 'https://headless-browser.airlst.app/api';
 
