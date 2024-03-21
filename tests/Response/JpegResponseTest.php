@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Airlst\HeadlessBrowserClientPhp\Tests\Response;
+namespace Airlst\HeadlessBrowserClient\Tests\Response;
 
-use Airlst\HeadlessBrowserClientPhp\Response\JpegResponse;
-use Airlst\HeadlessBrowserClientPhp\Response\Response;
+use Airlst\HeadlessBrowserClient\Response\JpegResponse;
+use Airlst\HeadlessBrowserClient\Response\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;

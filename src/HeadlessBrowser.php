@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Airlst\HeadlessBrowserClientPhp;
+namespace Airlst\HeadlessBrowserClient;
 
-use Airlst\HeadlessBrowserClientPhp\Response\JpegResponse;
-use Airlst\HeadlessBrowserClientPhp\Response\PdfResponse;
+use Airlst\HeadlessBrowserClient\Response\JpegResponse;
+use Airlst\HeadlessBrowserClient\Response\PdfResponse;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
 

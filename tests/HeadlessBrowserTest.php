@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Airlst\HeadlessBrowserClientPhp\Tests;
+namespace Airlst\HeadlessBrowserClient\Tests;
 
-use Airlst\HeadlessBrowserClientPhp\HeadlessBrowser;
+use Airlst\HeadlessBrowserClient\HeadlessBrowser;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;

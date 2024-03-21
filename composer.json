@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Airlst\\HeadlessBrowserClientPhp\\": "src"
+            "Airlst\\HeadlessBrowserClient\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Airlst\\HeadlessBrowserClientPhp\\Tests\\": "tests"
+            "Airlst\\HeadlessBrowserClient\\Tests\\": "tests"
         }
     },
     "config": {
