@@ -9,13 +9,13 @@ use Airlst\HeadlessBrowserClient\Response\PdfResponse;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
 
-readonly class HeadlessBrowser
+class HeadlessBrowser
 {
     private const API_URL = 'https://headless-browser.airlst.app/api';
 
     public function __construct(
-        private ClientInterface $client,
-        private string $apiKey
+        private readonly ClientInterface $client,
+        private readonly string $apiKey
     ) {}
 
     public function pdf(
