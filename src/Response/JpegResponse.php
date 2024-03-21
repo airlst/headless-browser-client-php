@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Airlst\HeadlessBrowserClient\Response;
 
-class JpegResponse extends Response
+final readonly class JpegResponse extends Response
 {
     public function contents(): string
     {

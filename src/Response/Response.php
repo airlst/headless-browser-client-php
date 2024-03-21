@@ -6,7 +6,7 @@ namespace Airlst\HeadlessBrowserClient\Response;
 
 use Psr\Http\Message\ResponseInterface;
 
-abstract class Response
+abstract readonly class Response
 {
     protected array $body;
 

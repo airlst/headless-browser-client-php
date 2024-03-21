@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Airlst\HeadlessBrowserClient\Response;
 
-class PdfResponse extends Response
+final readonly class PdfResponse extends Response
 {
     public function contents(): string
     {
