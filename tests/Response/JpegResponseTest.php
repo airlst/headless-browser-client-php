@@ -18,6 +18,7 @@ final class JpegResponseTest extends TestCase
     public function testJpegMethodReturnsBodyItemFromResponse(): void
     {
         $response = Mockery::mock(ResponseInterface::class);
+        $response->shouldReceive('getStatusCode')->andReturn(200);
         $response->shouldReceive('getBody->getContents')->andReturn('{"jpeg": "image"}');
 
         $jpeg = new JpegResponse($response);

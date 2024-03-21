@@ -18,6 +18,7 @@ final class PdfResponseTest extends TestCase
     public function testPdfMethodReturnsBodyItemFromResponse(): void
     {
         $response = Mockery::mock(ResponseInterface::class);
+        $response->shouldReceive('getStatusCode')->andReturn(200);
         $response->shouldReceive('getBody->getContents')->andReturn('{"pdf": "pdf content"}');
 
         $pdf = new PdfResponse($response);
