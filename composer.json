@@ -5,6 +5,8 @@
     "type": "library",
     "keywords": [
         "airlst",
+        "headless-browser",
+        "headless-browser-client",
         "headless-browser-client-php"
     ],
     "authors": [
@@ -17,15 +19,15 @@
     "homepage": "https://github.com/airlst/headless-browser-client-php",
     "require": {
         "php": "^8.2",
-        "guzzlehttp/guzzle": "^7.8"
+        "guzzlehttp/guzzle": "^7.8.1"
     },
     "require-dev": {
-        "airlst/php-cs-fixer-config": "^1.3",
-        "airlst/phpstan-config": "^1.3",
-        "airlst/rector-config": "^2.0",
+        "airlst/php-cs-fixer-config": "^1.3.1",
+        "airlst/phpstan-config": "^1.3.4",
+        "airlst/rector-config": "^2.0.3",
         "ergebnis/composer-normalize": "^2.42",
-        "mockery/mockery": "^1.6",
-        "phpunit/phpunit": "^10.0"
+        "mockery/mockery": "^1.6.10",
+        "phpunit/phpunit": "^10.5.14"
     },
     "autoload": {
         "psr-4": {
