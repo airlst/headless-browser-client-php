@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/airlst/headless-browser-client-php.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/airlst/headless-browser-client-php.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client-php)
-![GitHub Actions](https://github.com/airlst/headless-browser-client-php/actions/workflows/main.yml/badge.svg)
 
 PHP Client to interact with AirLST Headless Browser service.
 
