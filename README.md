@@ -1,7 +1,7 @@
 # AirLST Headless Browser PHP Client
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/airlst/headless-browser-client-php.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client-php)
-[![Total Downloads](https://img.shields.io/packagist/dt/airlst/headless-browser-client-php.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client-php)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/airlst/headless-browser-client.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client)
+[![Total Downloads](https://img.shields.io/packagist/dt/airlst/headless-browser-client.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client)
 
 PHP Client to interact with AirLST Headless Browser service.
 
@@ -10,12 +10,12 @@ PHP Client to interact with AirLST Headless Browser service.
 You can install the package via composer:
 
 ```bash
-composer require airlst/headless-browser-client-php
+composer require airlst/headless-browser-client
 ```
 
 ## Usage
 
-Initialize the headless browser client with Guzzle HTTP client and your API key.
+Initialize the headless browser client with the Guzzle HTTP client and your API key.
 
 ```php
 $httpClient = new \GuzzleHttp\Client();
@@ -43,10 +43,10 @@ $headlessBrowser->jpeg(
 
 ### Response
 
-All methods return `\Airlst\HeadlessBrowserClient\Response` object.
+All methods return the `\Airlst\HeadlessBrowserClient\Response` object.
 Provides 2 public methods:
 
-- `temporaryUrl()` - returns temporary file URL stored in S3 bucket. Expires in 5 minutes after generation
+- `temporaryUrl()` - returns a temporary file URL stored in the S3 bucket. Expires in 5 minutes after generation
 - `contents()` - downloads file from S3 bucket and returns contents of the file as string
 
 ### Testing
