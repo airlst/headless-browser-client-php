@@ -7,6 +7,7 @@ namespace Airlst\HeadlessBrowserClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 
 final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
 {
@@ -22,16 +23,11 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
         string $format = 'A4',
         array $margins = [10, 10, 10, 10]
     ): Response {
-        $request = new Request(
-            'POST',
-            self::API_URL . '/pdf',
-            $this->requestHeaders(),
-            json_encode([
-                'html' => $html,
-                'format' => $format,
-                'margins' => $margins,
-            ], JSON_THROW_ON_ERROR)
-        );
+        $request = $this->prepareRequest('/pdf', [
+            'html' => $html,
+            'format' => $format,
+            'margins' => $margins,
+        ]);
 
         $response = $this->client->sendRequest($request);
 
@@ -42,27 +38,27 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
         string $html,
         int $quality = 75
     ): Response {
-        $request = new Request(
-            'POST',
-            self::API_URL . '/jpeg',
-            $this->requestHeaders(),
-            json_encode([
-                'html' => $html,
-                'quality' => $quality,
-            ], JSON_THROW_ON_ERROR)
-        );
+        $request = $this->prepareRequest('/jpeg', [
+            'html' => $html,
+            'quality' => $quality,
+        ]);
 
         $response = $this->client->sendRequest($request);
 
         return new Response($response);
     }
 
-    private function requestHeaders(): array
+    private function prepareRequest(string $uri, array $payload): RequestInterface
     {
-        return [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'Authorization' => "Bearer {$this->apiKey}",
-        ];
+        return new Request(
+            'POST',
+            self::API_URL . $uri,
+            [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer {$this->apiKey}",
+            ],
+            json_encode($payload, JSON_THROW_ON_ERROR)
+        );
     }
 }
