@@ -45,7 +45,7 @@ final class AirlstHeadlessBrowserTest extends TestCase
 
                 return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A3","margins":[5,5,5,5]}';
             })
-            ->andReturn(new Response(200, [], json_encode(['pdf' => base64_encode('pdf content')])));
+            ->andReturn(new Response(200, [], json_encode(['contents' => base64_encode('pdf content')])));
 
         $pdf = (new AirlstHeadlessBrowser($client, 'api-key'))->pdf('<p>html</p>', 'A3', [5, 5, 5, 5]);
 
@@ -80,7 +80,7 @@ final class AirlstHeadlessBrowserTest extends TestCase
 
                 return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","quality":95}';
             })
-            ->andReturn(new Response(200, [], json_encode(['jpeg' => base64_encode('jpeg content')])));
+            ->andReturn(new Response(200, [], json_encode(['contents' => base64_encode('jpeg content')])));
 
         $jpeg = (new AirlstHeadlessBrowser($client, 'api-key'))->jpeg('<p>html</p>', 95);
 

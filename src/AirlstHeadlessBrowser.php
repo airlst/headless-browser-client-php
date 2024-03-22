@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Airlst\HeadlessBrowserClient;
 
-use Airlst\HeadlessBrowserClient\Response\JpegResponse;
-use Airlst\HeadlessBrowserClient\Response\PdfResponse;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
 
@@ -22,7 +20,7 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
         string $html,
         string $format = 'A4',
         array $margins = [10, 10, 10, 10]
-    ): PdfResponse {
+    ): Response {
         $request = new Request(
             'POST',
             self::API_URL . '/pdf',
@@ -36,13 +34,13 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
 
         $response = $this->client->sendRequest($request);
 
-        return new PdfResponse($response);
+        return new Response($response);
     }
 
     public function jpeg(
         string $html,
         int $quality = 75
-    ): JpegResponse {
+    ): Response {
         $request = new Request(
             'POST',
             self::API_URL . '/jpeg',
@@ -55,7 +53,7 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
 
         $response = $this->client->sendRequest($request);
 
-        return new JpegResponse($response);
+        return new Response($response);
     }
 
     private function requestHeaders(): array
