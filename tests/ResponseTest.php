@@ -35,6 +35,18 @@ final class ResponseTest extends TestCase
         $this->assertSame('foo', (new Response($response))->temporaryUrl());
     }
 
+    public function testContentsMethodThrowsRuntimeExceptionFetchingTemporaryUrlFails(): void
+    {
+        $response = Mockery::mock(ResponseInterface::class);
+        $response->shouldReceive('getStatusCode')->andReturn(200);
+        $response->shouldReceive('getBody->getContents')->andReturn(json_encode(['temporary_url' => 'foo']));
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Failed to fetch the file contents.');
+
+        (new Response($response))->contents();
+    }
+
     public function testContentsMethodFetchesTemporaryUrlContents(): void
     {
         $response = Mockery::mock(ResponseInterface::class);

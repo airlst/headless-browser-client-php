@@ -31,6 +31,12 @@ final readonly class Response
 
     public function contents(): string
     {
-        return file_get_contents($this->temporaryUrl()); // @phpstan-ignore-line
+        $contents = @file_get_contents($this->temporaryUrl(), true);
+
+        if ($contents === false) {
+            throw new RuntimeException('Failed to fetch the file contents.');
+        }
+
+        return $contents;
     }
 }
