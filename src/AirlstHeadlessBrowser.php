@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Airlst\HeadlessBrowserClient;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
 
@@ -12,8 +13,8 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
     private const API_URL = 'https://headless-browser.airlst.app/api';
 
     public function __construct(
-        private ClientInterface $client,
-        private string $apiKey
+        private string $apiKey,
+        private ClientInterface $client = new Client()
     ) {}
 
     public function pdf(

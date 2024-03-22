@@ -2,6 +2,6 @@
 
 All notable changes to `headless-browser-client-php` will be documented in this file
 
-## 1.0.0 - 201X-XX-XX
+## 1.0.0 - 2024-03-22
 
-- initial release
+- Initial release

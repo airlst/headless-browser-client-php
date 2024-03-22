@@ -1,5 +1,5 @@
 {
-    "name": "airlst/headless-browser-client-php",
+    "name": "airlst/headless-browser-client",
     "description": "AirLST Headless Browser PHP Client",
     "license": "MIT",
     "type": "library",

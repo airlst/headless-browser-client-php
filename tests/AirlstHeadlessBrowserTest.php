@@ -47,7 +47,7 @@ final class AirlstHeadlessBrowserTest extends TestCase
             })
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
-        $pdf = (new AirlstHeadlessBrowser($client, 'api-key'))->pdf('<p>html</p>', 'A3', [5, 5, 5, 5]);
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', 'A3', [5, 5, 5, 5]);
 
         $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
     }
@@ -82,7 +82,7 @@ final class AirlstHeadlessBrowserTest extends TestCase
             })
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/jpeg'])));
 
-        $jpeg = (new AirlstHeadlessBrowser($client, 'api-key'))->jpeg('<p>html</p>', 95);
+        $jpeg = (new AirlstHeadlessBrowser('api-key', $client))->jpeg('<p>html</p>', 95);
 
         $this->assertSame('http://example.com/jpeg', $jpeg->temporaryUrl());
     }

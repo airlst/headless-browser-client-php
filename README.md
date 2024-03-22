@@ -19,7 +19,7 @@ Initialize the headless browser client with Guzzle HTTP client and your API key.
 
 ```php
 $httpClient = new \GuzzleHttp\Client();
-$headlessBrowser = new \AirLST\HeadlessBrowserClient\AirlstHeadlessBrowser($httpClient, 'api-key-here');
+$headlessBrowser = new \AirLST\HeadlessBrowserClient\AirlstHeadlessBrowser('api-key-here', $httpClient);
 ```
 
 ### Generate PDF from HTML
