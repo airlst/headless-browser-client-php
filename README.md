@@ -7,7 +7,7 @@ PHP Client to interact with AirLST Headless Browser service.
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer:
 
 ```bash
 composer require airlst/headless-browser-client
@@ -15,11 +15,10 @@ composer require airlst/headless-browser-client
 
 ## Usage
 
-Initialize the headless browser client with the Guzzle HTTP client and your API key.
+Initialize the headless browser client with your API key.
 
 ```php
-$httpClient = new \GuzzleHttp\Client();
-$headlessBrowser = new \AirLST\HeadlessBrowserClient\AirlstHeadlessBrowser('api-key-here', $httpClient);
+$headlessBrowser = new \AirLST\HeadlessBrowserClient\AirlstHeadlessBrowser('api-key-here');
 ```
 
 ### Generate PDF from HTML
