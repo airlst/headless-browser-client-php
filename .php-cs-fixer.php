@@ -7,4 +7,6 @@ $factory = new Airlst\PhpCsFixerConfig\Factory([
     'tests',
 ]);
 
-return $factory->create();
+return $factory
+    ->customRules(['final_class' => true])
+    ->create();
