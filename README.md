@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/airlst/headless-browser-client-php.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/airlst/headless-browser-client-php.svg?style=flat-square)](https://packagist.org/packages/airlst/headless-browser-client-php)
-![GitHub Actions](https://github.com/airlst/headless-browser-client-php/actions/workflows/main.yml/badge.svg)
 
 PHP Client to interact with AirLST Headless Browser service.
 
@@ -33,9 +32,6 @@ $headlessBrowser->pdf(
 );
 ```
 
-Returns `\Airlst\HeadlessBrowserClient\Response\PdfResponse` object.
-You can access `contents()` method on this object to get PDF contents as string.
-
 ### Generate JPEG from HTML
 
 ```php
@@ -45,8 +41,13 @@ $headlessBrowser->jpeg(
 );
 ```
 
-Returns `\Airlst\HeadlessBrowserClient\Response\JpegResponse` object.
-You can access `contents()` method on this object to get JPEG contents as string.
+### Response
+
+All methods return `\Airlst\HeadlessBrowserClient\Response` object.
+Provides 2 public methods:
+
+- `temporaryUrl()` - returns temporary file URL stored in S3 bucket. Expires in 5 minutes after generation
+- `contents()` - downloads file from S3 bucket and returns contents of the file as string
 
 ### Testing
 
