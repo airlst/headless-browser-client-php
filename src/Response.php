@@ -24,19 +24,13 @@ final readonly class Response
         $this->body = $body;
     }
 
-    public function base64Contents(): string
+    public function temporaryUrl(): string
     {
-        return $this->body['contents'];
+        return $this->body['temporary_url'];
     }
 
     public function contents(): string
     {
-        $contents = base64_decode($this->base64Contents(), true);
-
-        if ($contents === false) {
-            throw new RuntimeException('Failed to decode contents.');
-        }
-
-        return $contents;
+        return file_get_contents($this->temporaryUrl()); // @phpstan-ignore-line
     }
 }

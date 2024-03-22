@@ -45,11 +45,11 @@ final class AirlstHeadlessBrowserTest extends TestCase
 
                 return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A3","margins":[5,5,5,5]}';
             })
-            ->andReturn(new Response(200, [], json_encode(['contents' => base64_encode('pdf content')])));
+            ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
         $pdf = (new AirlstHeadlessBrowser($client, 'api-key'))->pdf('<p>html</p>', 'A3', [5, 5, 5, 5]);
 
-        $this->assertSame('pdf content', $pdf->contents());
+        $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
     }
 
     public function testRequestsJpegContents(): void
@@ -80,11 +80,11 @@ final class AirlstHeadlessBrowserTest extends TestCase
 
                 return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","quality":95}';
             })
-            ->andReturn(new Response(200, [], json_encode(['contents' => base64_encode('jpeg content')])));
+            ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/jpeg'])));
 
         $jpeg = (new AirlstHeadlessBrowser($client, 'api-key'))->jpeg('<p>html</p>', 95);
 
-        $this->assertSame('jpeg content', $jpeg->contents());
+        $this->assertSame('http://example.com/jpeg', $jpeg->temporaryUrl());
     }
 
     public function testImplementsHeadlessBrowser(): void

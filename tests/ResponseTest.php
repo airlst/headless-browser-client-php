@@ -26,24 +26,24 @@ final class ResponseTest extends TestCase
         new Response($response);
     }
 
-    public function testJpegMethodReturnsBodyItemFromResponse(): void
+    public function testTemporaryUrlMethodReturnsBodyItemFromResponse(): void
     {
         $response = Mockery::mock(ResponseInterface::class);
         $response->shouldReceive('getStatusCode')->andReturn(200);
-        $response->shouldReceive('getBody->getContents')->andReturn(json_encode(['contents' => base64_encode('image')]));
+        $response->shouldReceive('getBody->getContents')->andReturn(json_encode(['temporary_url' => 'foo']));
 
-        $this->assertSame('image', (new Response($response))->contents());
+        $this->assertSame('foo', (new Response($response))->temporaryUrl());
     }
 
-    public function testThrowsRuntimeExceptionOnInvalidBase64EncodedContent(): void
+    public function testContentsMethodFetchesTemporaryUrlContents(): void
     {
         $response = Mockery::mock(ResponseInterface::class);
         $response->shouldReceive('getStatusCode')->andReturn(200);
-        $response->shouldReceive('getBody->getContents')->andReturn(json_encode(['contents' => 'not-encoded']));
+        $response->shouldReceive('getBody->getContents')->andReturn(json_encode(['temporary_url' => 'https://fakeimg.pl/4x4/']));
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Failed to decode contents.');
-
-        (new Response($response))->contents();
+        $this->assertSame(
+            file_get_contents('https://fakeimg.pl/4x4/'),
+            (new Response($response))->contents()
+        );
     }
 }
