@@ -6,18 +6,20 @@ namespace Airlst\HeadlessBrowserClient;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Override;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
 final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
 {
-    private const API_URL = 'https://headless-browser.airlst.app/api';
+    private const string API_URL = 'https://headless-browser.airlst.app/api';
 
     public function __construct(
         private string $apiKey,
         private ClientInterface $client = new Client()
     ) {}
 
+    #[Override]
     public function pdf(
         string $html,
         string $format = 'A4',
@@ -34,6 +36,7 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
         return new Response($response);
     }
 
+    #[Override]
     public function jpeg(
         string $html,
         int $quality = 75
@@ -48,7 +51,7 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
         return new Response($response);
     }
 
-    private function prepareRequest(string $uri, array $payload): RequestInterface
+    private function prepareRequest(string $uri, array $payload): RequestInterface // @phpstan-ignore-line
     {
         return new Request(
             'POST',
