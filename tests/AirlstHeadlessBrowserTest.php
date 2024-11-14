@@ -43,11 +43,11 @@ final class AirlstHeadlessBrowserTest extends TestCase
                     return false;
                 }
 
-                return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A3","margins":[5,5,5,5]}';
+                return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A4","margins":[5,5,5,5],"width":null,"height":null}';
             })
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
-        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', 'A3', [5, 5, 5, 5]);
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', [5, 5, 5, 5], 'A4');
 
         $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
     }
@@ -85,6 +85,23 @@ final class AirlstHeadlessBrowserTest extends TestCase
         $jpeg = (new AirlstHeadlessBrowser('api-key', $client))->jpeg('<p>html</p>', 95);
 
         $this->assertSame('http://example.com/jpeg', $jpeg->temporaryUrl());
+    }
+
+    public function testAcceptsCustomSize(): void
+    {
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')
+            ->once()
+            ->withArgs(function (RequestInterface $request): bool {
+                $inputs = json_decode($request->getBody()->getContents(), true);
+
+                return $inputs['width'] === 'customWidth' && $inputs['height'] === 'customHeight';
+            })
+            ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
+
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', width: 'customWidth', height: 'customHeight', margins: [5, 5, 5, 5]);
+
+        $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
     }
 
     public function testImplementsHeadlessBrowser(): void

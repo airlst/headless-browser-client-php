@@ -6,7 +6,7 @@ namespace Airlst\HeadlessBrowserClient;
 
 interface HeadlessBrowser
 {
-    public function pdf(string $html, string $format = 'A4', array $margins = [10, 10, 10, 10]): Response;
+    public function pdf(string $html, array $margins = [10, 10, 10, 10], ?string $format = null, ?string $width = null, ?string $height = null): Response;
 
     public function jpeg(string $html, int $quality = 75): Response;
 }
