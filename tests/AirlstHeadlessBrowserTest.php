@@ -87,6 +87,23 @@ final class AirlstHeadlessBrowserTest extends TestCase
         $this->assertSame('http://example.com/jpeg', $jpeg->temporaryUrl());
     }
 
+    public function testAcceptsCustomSize(): void
+    {
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')
+            ->once()
+            ->withArgs(function (RequestInterface $request): bool {
+                $inputs = json_decode($request->getBody()->getContents(), true);
+
+                return $inputs['format'] === ['customWidth', 'customHeight'];
+            })
+            ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
+
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', ['customWidth', 'customHeight'], [5, 5, 5, 5]);
+
+        $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
+    }
+
     public function testImplementsHeadlessBrowser(): void
     {
         $this->assertTrue(

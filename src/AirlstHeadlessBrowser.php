@@ -22,7 +22,7 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
     #[Override]
     public function pdf(
         string $html,
-        string $format = 'A4',
+        array|string $format = 'A4',
         array $margins = [10, 10, 10, 10]
     ): Response {
         $request = $this->prepareRequest('/pdf', [
