@@ -23,11 +23,23 @@ $headlessBrowser = new \AirLST\HeadlessBrowserClient\AirlstHeadlessBrowser('api-
 
 ### Generate PDF from HTML
 
+#### Using standard format
 ```php
 $headlessBrowser->pdf(
     '<p>html</p>', // html content
-    'A4', // page size
     [10, 10, 10, 10] // margins
+    'A4', // page size
+);
+```
+
+#### Using custom size
+```php
+$headlessBrowser->pdf(
+    '<p>html</p>', // html content
+    [10, 10, 10, 10] // margins
+    null, // Page size must be null otherwise it will override the custom width and height
+    '80mm', // width
+    '60mm', // height
 );
 ```
 

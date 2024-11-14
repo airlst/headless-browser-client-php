@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to `headless-browser-client-php` will be documented in this file
+## 3.0.0 - 2024-07-25
+ - format can be set to null
+ - add width and height properties
 
 ## 2.0.0 - 2024-07-25
 
