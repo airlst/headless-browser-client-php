@@ -43,7 +43,7 @@ final class AirlstHeadlessBrowserTest extends TestCase
                     return false;
                 }
 
-                return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A3","margins":[5,5,5,5]}';
+                return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A3","margins":[5,5,5,5],"width":null,"height":null}';
             })
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
@@ -95,11 +95,11 @@ final class AirlstHeadlessBrowserTest extends TestCase
             ->withArgs(function (RequestInterface $request): bool {
                 $inputs = json_decode($request->getBody()->getContents(), true);
 
-                return $inputs['format'] === ['customWidth', 'customHeight'];
+                return $inputs['width'] === 'customWidth' && $inputs['height'] === 'customHeight';
             })
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
-        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', ['customWidth', 'customHeight'], [5, 5, 5, 5]);
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', width: 'customWidth', height: 'customHeight', margins: [5, 5, 5, 5]);
 
         $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
     }
