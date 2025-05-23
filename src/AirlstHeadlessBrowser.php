@@ -10,14 +10,22 @@ use Override;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
-final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
+final class AirlstHeadlessBrowser implements HeadlessBrowser
 {
     private const string API_URL = 'https://headless-browser.airlst.app/api';
+
+    private bool $sanitizeHtml = true;
 
     public function __construct(
         private string $apiKey,
         private ClientInterface $client = new Client()
     ) {}
+
+    public function withoutHtmlSanitization(): self
+    {
+        $this->sanitizeHtml = false;
+        return $this;
+    }
 
     #[Override]
     public function pdf(
@@ -33,6 +41,7 @@ final readonly class AirlstHeadlessBrowser implements HeadlessBrowser
             'margins' => $margins,
             'width' => $width,
             'height' => $height,
+            'sanitize' => $this->sanitizeHtml,
         ]);
 
         $response = $this->client->sendRequest($request);

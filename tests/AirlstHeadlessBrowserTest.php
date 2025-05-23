@@ -43,7 +43,7 @@ final class AirlstHeadlessBrowserTest extends TestCase
                     return false;
                 }
 
-                return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A4","margins":[5,5,5,5],"width":null,"height":null}';
+                return $request->getBody()->getContents() === '{"html":"<p>html<\/p>","format":"A4","margins":[5,5,5,5],"width":null,"height":null,"sanitize":true}';
             })
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
@@ -100,6 +100,40 @@ final class AirlstHeadlessBrowserTest extends TestCase
             ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
 
         $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', width: 'customWidth', height: 'customHeight', margins: [5, 5, 5, 5]);
+
+        $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
+    }
+
+    public function testByDefaultSanitizesHtmlIsTrue(): void
+    {
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')
+            ->once()
+            ->withArgs(function (RequestInterface $request): bool {
+                $inputs = json_decode($request->getBody()->getContents(), true);
+
+                return $inputs['sanitize'] === true;
+            })
+            ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
+
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->pdf('<p>html</p>', width: 'customWidth', height: 'customHeight', margins: [5, 5, 5, 5]);
+
+        $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
+    }
+
+    public function testAllowToSkipSanitation(): void
+    {
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')
+            ->once()
+            ->withArgs(function (RequestInterface $request): bool {
+                $inputs = json_decode($request->getBody()->getContents(), true);
+
+                return $inputs['sanitize'] === false;
+            })
+            ->andReturn(new Response(200, [], json_encode(['temporary_url' => 'http://example.com/pdf'])));
+
+        $pdf = (new AirlstHeadlessBrowser('api-key', $client))->withoutHtmlSanitization()->pdf('<p>html</p>', width: 'customWidth', height: 'customHeight', margins: [5, 5, 5, 5]);
 
         $this->assertSame('http://example.com/pdf', $pdf->temporaryUrl());
     }
