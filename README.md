@@ -52,9 +52,27 @@ $headlessBrowser->jpeg(
 );
 ```
 
+### Inspect a page
+
+```php
+$inspection = $headlessBrowser->inspect(
+    'https://airlst.app/signed-preview',
+    [['width' => 390, 'height' => 844]],
+    [['key' => 'default', 'arg' => []]],
+);
+
+foreach ($inspection->renders() as $render) {
+    foreach ($render['tiles'] as $tile) {
+        $png = $inspection->tileContents($tile['url'], 4_000_000);
+    }
+}
+
+$timedOut = $inspection->timedOut();
+```
+
 ### Response
 
-All methods return the `\Airlst\HeadlessBrowserClient\Response` object.
+The `pdf()` and `jpeg()` methods return the `\Airlst\HeadlessBrowserClient\Response` object.
 Provides 2 public methods:
 
 - `temporaryUrl()` - returns a temporary file URL stored in the S3 bucket. Expires in 5 minutes after generation
