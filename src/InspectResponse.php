@@ -138,16 +138,27 @@ final readonly class InspectResponse
 
         $contents = '';
         $stream = $response->getBody();
+        $consecutiveEmptyReads = 0;
         while (! $stream->eof()) {
             $chunk = $stream->read(min(8192, $maxBytes - strlen($contents) + 1));
             if ($chunk === '') {
-                break;
+                ++$consecutiveEmptyReads;
+                if ($consecutiveEmptyReads > 100) {
+                    throw new RuntimeException('Headless browser tile download was incomplete.');
+                }
+
+                continue;
             }
 
+            $consecutiveEmptyReads = 0;
             $contents .= $chunk;
             if (strlen($contents) > $maxBytes) {
                 throw new RuntimeException('Headless browser tile exceeds maximum size.');
             }
+        }
+
+        if ($length !== '' && strlen($contents) !== (int) $length) {
+            throw new RuntimeException('Headless browser tile download was incomplete.');
         }
 
         if (! str_starts_with($contents, "\x89PNG\r\n\x1a\n")) {

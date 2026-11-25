@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 use function strlen;
@@ -105,6 +106,48 @@ final class InspectResponseTest extends TestCase
         $inspect = new InspectResponse(new Response(200, [], '{"renders":[],"timed_out":false}'), $client);
 
         $this->assertSame($png, $inspect->tileContents('https://bucket.example/tile.png?signature=abc', 100));
+    }
+
+    public function testContinuesAfterAnEmptyReadBeforeEof(): void
+    {
+        $png = "\x89PNG\r\n\x1a\nimage-data";
+        $stream = Mockery::mock(StreamInterface::class);
+        $stream->shouldReceive('eof')->andReturn(false, false, false, true);
+        $stream->shouldReceive('read')->andReturn("\x89PNG\r\n\x1a\n", '', 'image-data');
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')->once()->andReturn(new Response(200, [], $stream));
+
+        $inspect = new InspectResponse(new Response(200, [], '{"renders":[],"timed_out":false}'), $client);
+
+        $this->assertSame($png, $inspect->tileContents('https://bucket.example/tile.png', 100));
+    }
+
+    public function testRejectsStreamThatOnlyReturnsEmptyReadsWithoutEof(): void
+    {
+        $stream = Mockery::mock(StreamInterface::class);
+        $stream->shouldReceive('eof')->andReturn(false);
+        $stream->shouldReceive('read')->andReturn('');
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')->once()->andReturn(new Response(200, [], $stream));
+
+        $inspect = new InspectResponse(new Response(200, [], '{"renders":[],"timed_out":false}'), $client);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Headless browser tile download was incomplete.');
+        $inspect->tileContents('https://bucket.example/tile.png', 100);
+    }
+
+    public function testRejectsBodyShorterThanContentLength(): void
+    {
+        $png = "\x89PNG\r\n\x1a\nimage-data";
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')->once()->andReturn(new Response(200, ['Content-Length' => (string) (strlen($png) + 4)], $png));
+
+        $inspect = new InspectResponse(new Response(200, [], '{"renders":[],"timed_out":false}'), $client);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Headless browser tile download was incomplete.');
+        $inspect->tileContents('https://bucket.example/tile.png', 100);
     }
 
     public function testRejectsTileOverSizeByHeader(): void
