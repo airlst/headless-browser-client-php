@@ -24,6 +24,7 @@ final class AirlstHeadlessBrowser implements HeadlessBrowser
     public function withoutHtmlSanitization(): self
     {
         $this->sanitizeHtml = false;
+
         return $this;
     }
 
@@ -62,6 +63,35 @@ final class AirlstHeadlessBrowser implements HeadlessBrowser
         $response = $this->client->sendRequest($request);
 
         return new Response($response);
+    }
+
+    /**
+     * @param list<array{width: int, height: int}>                $viewports
+     * @param list<array{key: string, arg: array<string, mixed>}> $scenarios
+     */
+    #[Override]
+    public function inspect(
+        string $url,
+        array $viewports,
+        array $scenarios,
+        int $maxTiles = 6,
+        int $deadlineMs = 20000,
+    ): InspectResponse {
+        $request = $this->prepareRequest('/inspect', [
+            'url' => $url,
+            'viewports' => $viewports,
+            'scenarios' => array_map(
+                static fn (array $scenario): array => [
+                    'key' => $scenario['key'],
+                    'arg' => (object) $scenario['arg'],
+                ],
+                $scenarios,
+            ),
+            'max_tiles' => $maxTiles,
+            'deadline_ms' => $deadlineMs,
+        ]);
+
+        return new InspectResponse($this->client->sendRequest($request), $this->client);
     }
 
     private function prepareRequest(string $uri, array $payload): RequestInterface // @phpstan-ignore-line

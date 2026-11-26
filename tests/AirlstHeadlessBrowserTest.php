@@ -6,6 +6,7 @@ namespace Airlst\HeadlessBrowserClient\Tests;
 
 use Airlst\HeadlessBrowserClient\AirlstHeadlessBrowser;
 use Airlst\HeadlessBrowserClient\HeadlessBrowser;
+use Airlst\HeadlessBrowserClient\InspectResponse;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -143,5 +144,49 @@ final class AirlstHeadlessBrowserTest extends TestCase
         $this->assertTrue(
             is_subclass_of(AirlstHeadlessBrowser::class, HeadlessBrowser::class)
         );
+    }
+
+    public function testInspectPostsContractBodyAndHeaders(): void
+    {
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')
+            ->once()
+            ->withArgs(function (RequestInterface $request): bool {
+                return $request->getMethod() === 'POST'
+                    && (string) $request->getUri() === 'https://headless-browser.airlst.app/api/inspect'
+                    && $request->getHeaderLine('Content-Type') === 'application/json'
+                    && $request->getHeaderLine('Accept') === 'application/json'
+                    && $request->getHeaderLine('Authorization') === 'Bearer api-key'
+                    && (string) $request->getBody() === '{"url":"https:\/\/airlst.app\/preview","viewports":[{"width":390,"height":844}],"scenarios":[{"key":"default","arg":{"state":null}},{"key":"empty","arg":{}}],"max_tiles":4,"deadline_ms":17000}';
+            })
+            ->andReturn(new Response(200, [], '{"renders":[],"timed_out":false}'));
+
+        $inspect = (new AirlstHeadlessBrowser('api-key', $client))->inspect(
+            'https://airlst.app/preview',
+            [['width' => 390, 'height' => 844]],
+            [['key' => 'default', 'arg' => ['state' => null]], ['key' => 'empty', 'arg' => []]],
+            4,
+            17000,
+        );
+
+        $this->assertInstanceOf(InspectResponse::class, $inspect);
+        $this->assertSame([], $inspect->renders());
+    }
+
+    public function testInspectSerializesEmptyScenariosAndDefaultLimits(): void
+    {
+        $client = Mockery::mock(ClientInterface::class);
+        $client->shouldReceive('sendRequest')
+            ->once()
+            ->withArgs(fn (RequestInterface $request): bool => (string) $request->getBody() === '{"url":"https:\/\/airlst.app\/preview","viewports":[{"width":1440,"height":900}],"scenarios":[],"max_tiles":6,"deadline_ms":20000}')
+            ->andReturn(new Response(200, [], '{"renders":[],"timed_out":false}'));
+
+        $inspect = (new AirlstHeadlessBrowser('api-key', $client))->inspect(
+            'https://airlst.app/preview',
+            [['width' => 1440, 'height' => 900]],
+            [],
+        );
+
+        $this->assertSame([], $inspect->renders());
     }
 }

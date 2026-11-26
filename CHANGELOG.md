@@ -2,6 +2,9 @@
 
 All notable changes to `headless-browser-client-php` will be documented in this file
 
+## 3.2.0 - 2026-11-25
+ - add `inspect()` for page renders, PNG tile downloads, and timeouts
+
 ## 3.1.0 - 2025-05-23
  - add a function to skip HTML sanitization `withoutHtmlSanitization()`
 
